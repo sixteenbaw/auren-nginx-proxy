@@ -9,9 +9,6 @@ server {
     resolver [fd12::10] ipv4=off ipv6=on valid=10s;
     resolver_timeout 5s;
 
-    # Upstream is supplied via env var ORIGIN (e.g., http://app:3000)
-    set $upstream "${ORIGIN}";
-
     # Basic hardening / sane defaults
     client_max_body_size 50m;
 
@@ -34,7 +31,7 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
 
-        proxy_pass $upstream;
+        proxy_pass ${ORIGIN};
 
         # Conditionally included by the entrypoint (may be empty)
         include /etc/nginx/snippets/basic_auth.conf;
